@@ -11,24 +11,29 @@
     <header>
         <h1 onclick="showTab('lobby')" style="cursor:pointer;">🎮 Arcade Hub</h1>
     </header>
+    <div class="user-settings">
+    <input type="text" id="username-input" placeholder="Dein Name...">
+    <button onclick="saveUsername()">Name speichern</button>
+    <p>Aktueller Name: <span id="current-username" style="font-weight:bold; color:#89b4fa;">Gast</span></p>
+</div>
 
-    <div id="lobby" class="tab-content active">
-        <h2>Wähle dein Spiel</h2>
-        <div class="lobby-grid">
-            <div class="game-card" onclick="showTab('tictactoe')">
-                <h3>❌ Tic-Tac-Toe ⭕</h3>
-                <p>Der Klassiker. Wähle dein Team!</p>
-            </div>
-            <div class="game-card" onclick="showTab('rps')">
-                <h3>✊✋✌️ RPS</h3>
-                <p>Schere, Stein, Papier. Echtzeit-Duell!</p>
-            </div>
-            <div class="game-card" onclick="showTab('tierlist')">
-                <h3>📊 Tier List</h3>
-                <p>Bewerte Bilder oder Text!</p>
-            </div>
-        </div>
+<div id="lobby" class="tab-content active">
+    <h2>Wähle dein Spiel</h2>
+    <div class="lobby-grid">
+        <div id="chat-area" style="margin-top:20px; border:1px solid #313244; padding:10px;">
+    <div id="chat-window" style="height:150px; overflow-y:auto; text-align:left; background:#111; padding:5px;"></div>
+    <input type="text" id="chat-input" placeholder="Nachricht schreiben...">
+    <button onclick="sendChat()">Senden</button>
+</div>
+        <div class="game-card" onclick="showTab('tictactoe')"><h3>❌ Tic-Tac-Toe</h3><p>Wähle dein Team!</p></div>
+        <div class="game-card" onclick="showTab('rps')"><h3>✊✋✌️ RPS</h3><p>Echtzeit-Duell!</p></div>
+        <div class="game-card" onclick="showTab('tierlist')"><h3>📊 Tier List</h3><p>Bewerte Bilder!</p></div>
+
+        <div class="game-card" onclick="showTab('clicktest')"><h3>⚡ Click Test</h3><p>Wer klickt schneller?</p></div>
+        <div class="game-card" onclick="showTab('guess')"><h3>❓ Guess Number</h3><p>Rate die Zahl (1-100)</p></div>
+        <div class="game-card" onclick="showTab('coin')"><h3>🪙 Coin Flip</h3><p>Kopf oder Zahl?</p></div>
     </div>
+</div>
 
     <div id="tictactoe" class="tab-content">
         <button class="back-btn" onclick="showTab('lobby')">⬅ Zurück zur Lobby</button>
@@ -95,6 +100,33 @@
         <div id="trash-can" ondrop="deleteItem(event)" ondragover="allowDrop(event)">
     🗑️ Element hierher ziehen zum Löschen
 </div>
+</div>
+
+    <div id="clicktest" class="tab-content">
+        <button class="back-btn" onclick="showTab('lobby')">⬅ Lobby</button>
+        <h2>Click Speed Test (10 Sek)</h2>
+        <div class="click-arena">
+            <div><h3>Du: <span id="my-clicks">0</span></h3></div>
+            <div><h3>Gegner: <span id="opp-clicks">0</span></h3></div>
+        </div>
+        <button id="click-btn" onclick="startClickTest()" style="font-size: 2em; padding: 40px;">KLICK MICH!</button>
+        <p id="click-timer">Zeit: 10s</p>
+    </div>
+
+    <div id="guess" class="tab-content">
+        <button class="back-btn" onclick="showTab('lobby')">⬅ Lobby</button>
+        <h2>Zahlen raten (1-100)</h2>
+        <input type="number" id="guess-input" placeholder="Deine Zahl...">
+        <button onclick="sendGuess()">Raten!</button>
+        <div id="guess-log" style="margin-top: 20px; color: #a6e3a1; border: 1px solid #313244; padding: 10px;"></div>
+    </div>
+
+    <div id="coin" class="tab-content">
+        <button class="back-btn" onclick="showTab('lobby')">⬅ Lobby</button>
+        <h2>Münzwurf</h2>
+        <div id="coin-visual" style="font-size: 5em; margin: 20px;">🪙</div>
+        <button onclick="socket.emit('flip-coin')">Münze werfen!</button>
+        <h2 id="coin-outcome">?</h2>
     </div>
 
     <script src="app.js"></script>
