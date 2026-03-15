@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <header>
+        <h1 onclick="showTab('lobby')" style="cursor:pointer;">🎮 Arcade Hub</h1>
+    </header>
+
+    <div id="lobby" class="tab-content active">
+        <h2>Wähle dein Spiel</h2>
+        <div class="lobby-grid">
+            <div class="game-card" onclick="showTab('tictactoe')">
+                <h3>❌ Tic-Tac-Toe ⭕</h3>
+                <p>Der Klassiker. Wähle dein Team!</p>
+            </div>
+            <div class="game-card" onclick="showTab('rps')">
+                <h3>✊✋✌️ RPS</h3>
+                <p>Schere, Stein, Papier. Echtzeit-Duell!</p>
+            </div>
+            <div class="game-card" onclick="showTab('tierlist')">
+                <h3>📊 Tier List</h3>
+                <p>Bewerte Bilder oder Text!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="tictactoe" class="tab-content">
+        <button class="back-btn" onclick="showTab('lobby')">⬅ Zurück zur Lobby</button>
+        <h2>Tic-Tac-Toe</h2>
+        <div class="team-selection">
+            <p id="team-display">Wähle dein Team:</p>
+            <button onclick="joinTeam('X')">Team ❌</button>
+            <button onclick="joinTeam('O')">Team ⭕</button>
+        </div>
+        <p id="turn-display">Warte auf ersten Zug...</p>
+        
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
+        </div>
+        <button class="reset-btn" onclick="requestReset()">🔄 Spiel neu starten</button>
+    </div>
+
+    <div id="rps" class="tab-content">
+        <button class="back-btn" onclick="showTab('lobby')">⬅ Zurück zur Lobby</button>
+        <h2>Schere, Stein, Papier</h2>
+        
+        <div class="rps-arena">
+            <div class="player-status">
+                <h3>Gegner</h3>
+                <div id="opponent-status" class="status-box">Wartet...</div>
+            </div>
+            
+            <h1 id="rps-winner-display">VS</h1>
+
+            <div class="player-status">
+                <h3>Du</h3>
+                <div id="my-status" class="status-box">Wähle weise!</div>
+            </div>
+        </div>
+
+        <div class="rps-buttons">
+            <button onclick="playRPS('Stein')">✊ Stein</button>
+            <button onclick="playRPS('Papier')">✋ Papier</button>
+            <button onclick="playRPS('Schere')">✌️ Schere</button>
+        </div>
+    </div>
+
+    <div id="tierlist" class="tab-content">
+        <button class="back-btn" onclick="showTab('lobby')">⬅ Zurück zur Lobby</button>
+        <h2>Tier List Maker</h2>
+        <p>Tippe Text ODER eine Bild-URL (http...) ein!</p>
+        <div class="tier-controls">
+            <input type="text" id="new-item-text" placeholder="Name oder Bild-URL...">
+            <button onclick="addItem()">Hinzufügen</button>
+        </div>
+        
+        <div class="tier-container">
+            <div class="tier-row"><div class="tier-label s-tier">S</div><div class="tier-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            <div class="tier-row"><div class="tier-label a-tier">A</div><div class="tier-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            <div class="tier-row"><div class="tier-label b-tier">B</div><div class="tier-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            <div class="tier-row"><div class="tier-label c-tier">C</div><div class="tier-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+            <div class="tier-row"><div class="tier-label d-tier">D</div><div class="tier-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div></div>
+        </div>
+
+        <h3>Unranked Pool</h3>
+        <div class="tier-zone unranked-pool" id="unranked-pool" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="trash-can" ondrop="deleteItem(event)" ondragover="allowDrop(event)">
+    🗑️ Element hierher ziehen zum Löschen
+</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

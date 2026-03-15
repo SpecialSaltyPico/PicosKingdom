@@ -1,0 +1,58 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f13; color: #fff; text-align: center; margin: 0; padding: 0; }
+header { background: #1e1e2e; padding: 15px; border-bottom: 2px solid #89b4fa; margin-bottom: 20px; }
+button { padding: 10px 20px; cursor: pointer; background: #89b4fa; color: #111; border: none; border-radius: 8px; font-weight: bold; transition: 0.2s; }
+button:hover { background: #b4befe; transform: scale(1.05); }
+.back-btn { background: #45475a; color: white; margin-bottom: 15px; }
+
+.tab-content { display: none; padding: 0 20px; }
+.active { display: block; }
+
+/* Lobby */
+.lobby-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px; }
+.game-card { background: #1e1e2e; border: 2px solid #313244; border-radius: 15px; padding: 20px; width: 200px; cursor: pointer; transition: 0.3s; }
+.game-card:hover { border-color: #89b4fa; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+/* Tic Tac Toe */
+.team-selection { margin-bottom: 15px; }
+.board { display: grid; grid-template-columns: repeat(3, 100px); gap: 8px; justify-content: center; margin: 20px auto; }
+.cell { width: 100px; height: 100px; background: #313244; display: flex; align-items: center; justify-content: center; font-size: 3em; cursor: pointer; border-radius: 10px; transition: 0.2s; }
+.cell:hover { background: #45475a; }
+.reset-btn { background: #f38ba8; color: white; }
+
+/* RPS */
+.rps-arena { display: flex; justify-content: center; align-items: center; gap: 50px; margin: 40px 0; }
+.status-box { background: #313244; padding: 20px; border-radius: 10px; font-size: 1.5em; min-width: 150px; border: 2px dashed #6c7086; }
+.rps-buttons button { font-size: 1.5em; margin: 10px; }
+
+/* Tier List */
+.tier-controls input { padding: 10px; width: 300px; border-radius: 8px; border: none; outline: none; margin-right: 10px; }
+.tier-container { display: flex; flex-direction: column; gap: 5px; width: 90%; max-width: 800px; margin: 0 auto; }
+.tier-row { display: flex; min-height: 80px; background: #1e1e2e; border: 1px solid #313244; border-radius: 8px; overflow: hidden; }
+.tier-label { width: 80px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold; color: black; }
+.tier-zone { flex-grow: 1; display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; min-height: 80px; }
+.s-tier { background: #f38ba8; } .a-tier { background: #fab387; } .b-tier { background: #f9e2af; } .c-tier { background: #a6e3a1; } .d-tier { background: #89b4fa; }
+
+.unranked-pool { background: #11111b; border: 2px dashed #45475a; margin: 20px auto; width: 90%; max-width: 800px; min-height: 120px; border-radius: 8px; }
+.tier-item { background: #cba6f7; color: black; padding: 10px; cursor: grab; border-radius: 5px; font-weight: bold; user-select: none; }
+.tier-item img { max-width: 80px; max-height: 80px; border-radius: 5px; pointer-events: none; }
+/* Mülleimer Style */
+#trash-can {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    height: 60px;
+    background: #f38ba8; /* Rot */
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px dashed #111;
+    transition: 0.3s;
+}
+
+#trash-can:hover {
+    background: #eba0ac;
+    transform: scale(1.02);
+}
