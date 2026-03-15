@@ -1,6 +1,28 @@
+// 1. Variable definieren (Global)
+let myName = localStorage.getItem('arcadeName') || "Gast_" + Math.floor(Math.random() * 1000);
+
+// 2. Den Namen sofort im UI anzeigen, sobald die Seite lädt
+window.onload = () => {
+    document.getElementById('current-username').innerText = myName;
+};
+
+// 3. Speicher-Funktion
+function saveUsername() {
+    const input = document.getElementById('username-input');
+    if (input && input.value.trim() !== "") {
+        myName = input.value.trim();
+        localStorage.setItem('arcadeName', myName); 
+        document.getElementById('current-username').innerText = myName;
+        alert("Name gespeichert!");
+    }
+}
+
+// 4. Socket initialisieren
 const socket = io();
 
+// --- 3. RESTLICHER CODE (Tabs, Tic-Tac-Toe, etc.) ---
 function showTab(tabId) {
+    // ... dein bisheriger Code ...
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
 }
@@ -166,3 +188,103 @@ function deleteItem(ev) {
         draggedElement.remove();
     }, 200);
 }
+// --- Click Test Logic ---
+let clicks = 0;
+let timerActive = false;
+
+function startClickTest() {
+    if (timerActive) {
+        clicks++;
+        document.getElementById('my-clicks').innerText = clicks;
+        socket.emit('click-sync', clicks);
+        return;
+    }
+    
+    // Startet das Spiel
+    clicks = 1;
+    timerActive = true;
+    let timeLeft = 10;
+    document.getElementById('my-clicks').innerText = clicks;
+    
+    const interval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('click-timer').innerText = `Zeit: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            timerActive = false;
+            alert(`Zeit um! Deine Klicks: ${clicks}`);
+            socket.emit('click-sync', 0); // Reset für nächste Runde
+        }
+    }, 1000);
+}
+
+socket.on('opponent-click', (data) => {
+    // Wir zeigen jetzt den Namen des Gegners an, falls mitgeschickt
+    document.getElementById('opp-clicks').innerText = `${data.name}: ${data.score}`;
+});
+
+// In der startClickTest Funktion beim emit:
+socket.emit('click-sync', { score: clicks, name: myName });
+
+// --- Guess Number Logic ---
+function sendGuess() {
+    const input = document.getElementById('guess-input');
+    const val = input.value;
+    if (val) {
+        // WICHTIG: Wir schicken ein Objekt mit 'guess' und 'name'
+        socket.emit('guess-number', { guess: val, name: myName });
+        input.value = ""; // Feld leeren
+    }
+}
+
+socket.on('guess-result', (data) => {
+    const log = document.getElementById('guess-log');
+    // data.name ist der Name, data.guess ist die Zahl, data.result ist der Text
+    log.innerHTML = `<p><strong>${data.name}</strong> riet ${data.guess}: <strong>${data.result}</strong></p>` + log.innerHTML;
+});
+
+// --- Coin Flip Logic ---
+socket.on('coin-result', (side) => {
+    const coin = document.getElementById('coin-visual');
+    const outcome = document.getElementById('coin-outcome');
+    
+    // Animation starten
+    coin.classList.add('flipping');
+    outcome.innerText = "Die Münze fliegt...";
+    
+    setTimeout(() => {
+        coin.classList.remove('flipping');
+        outcome.innerText = "Ergebnis: " + side;
+        // Ändert das Emoji je nach Ergebnis
+        coin.innerText = (side === 'Kopf') ? '👤' : '🔢';
+    }, 600); // Nach 0,6 Sekunden stoppt die Animation
+});
+// --- CHAT LOGIK ---
+function sendChat() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    
+    if (msg !== "") {
+        // Wir schicken den Text UND unseren Namen an den Server
+        socket.emit('send-chat', { name: myName, msg: msg });
+        input.value = ""; // Eingabefeld leeren
+    }
+}
+
+// Wenn wir eine Nachricht vom Server empfangen
+socket.on('receive-chat', (data) => {
+    const chatWin = document.getElementById('chat-window');
+    const msgElement = document.createElement('p');
+    
+    // Nachricht formatieren: Name fettgedruckt
+    msgElement.innerHTML = `<strong>${data.name}:</strong> ${data.msg}`;
+    chatWin.appendChild(msgElement);
+    
+    // Automatisch nach unten scrollen bei neuen Nachrichten
+    chatWin.scrollTop = chatWin.scrollHeight;
+});
+
+// Bonus: Senden mit der "Enter"-Taste
+document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendChat();
+});
